@@ -1,0 +1,14 @@
+command.bandit-admin.usage=§7/bandit-admin help
+command.bandit-admin.help=§7TODO()
+command.bandit-admin.missing-args=§7Missing argument %s.
+command.bandit-admin.invalid-arg-type=§7Invalid argument %s, expected %s.
+command.bandit-admin.ok=§aOK!
+
+message.bandit.task-started=§7Vein mining task %s §7is started!
+message.bandit.task-started.halt-hint=§7You can use §e/bandit halt §7to stop the task.
+message.bandit.task-finished=§7Vein mining task %s §7is finished; mining %s §7blocks and gathered %s §7items, time used %s§7.
+
+message.bandit.mode-changed=§7Vein mode has been switched to %s§7.
+
+command.bandit.halt.halted=§aHalted!
+command.bandit.halt.invalid-sender=§cThis command is only allowed for players.
