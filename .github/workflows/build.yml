@@ -1,0 +1,58 @@
+name: Build
+
+on:
+  pull_request:
+    branches: [ master ]
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Ubuntu Dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y mesa-utils xvfb x11-xserver-utils
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: |
+            8
+            11
+            17
+          distribution: "zulu"
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
+          build-scan-terms-of-use-agree: "yes"
+          validate-wrappers: true
+      - name: Grant execute permission to gradlew
+        run: chmod +x gradlew
+      - name: Setup the workspace
+        run: ./gradlew --build-cache --info --stacktrace setupDecompWorkspace
+      - name: Compile mod
+        run: ./gradlew --build-cache --info --stacktrace assemble
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.repository_id }}-build-libs
+          path: build/libs/
+          retention-days: 90
+      - name: Run post-build checks
+        id: build_mod
+        run: xvfb-run --server-args="-screen 1366x768x24" ./gradlew --build-cache --info --stacktrace build
+      - name: Attach gradle reports
+        if: failure() && steps.build_mod.conclusion == 'failure'
+        uses: actions/upload-artifact@v4
+        continue-on-error: true
+        with:
+          name: ${{ github.repository_id }}-reports
+          path: build/reports/
+          retention-days: 30
