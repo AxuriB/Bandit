@@ -47,7 +47,7 @@ jobs:
           retention-days: 90
       - name: Run post-build checks
         id: build_mod
-        run: xvfb-run --server-args="-screen 1366x768x24" ./gradlew --build-cache --info --stacktrace build
+        run: xvfb-run --server-args="-screen 0 1366x768x24" ./gradlew --build-cache --info --stacktrace build
       - name: Attach gradle reports
         if: failure() && steps.build_mod.conclusion == 'failure'
         uses: actions/upload-artifact@v4
