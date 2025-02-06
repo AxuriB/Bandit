@@ -75,14 +75,15 @@ object BanditCommand : CommandBase() {
 	override fun getTabCompletions(
 		server: MinecraftServer,
 		sender: ICommandSender,
-		argsRaw: Array<out String>,
+		args: Array<out String>,
 		targetPos: BlockPos?,
 	): List<String> {
-		val args = argsRaw.toMutableList()
-
-		return when(args.removeFirstOrNull()) {
-			"mode" -> VeinMiningMode.entries.map { it.ordinal.toString() }
-			"", null -> listOf("halt", "mode")
+		return when(args.size) {
+			1 -> listOf("halt", "mode")
+			2 -> when(args[0]) {
+				"mode" -> VeinMiningMode.entries.map { it.ordinal.toString() }
+				else -> listOf()
+			}
 			else -> listOf()
 		}
 	}

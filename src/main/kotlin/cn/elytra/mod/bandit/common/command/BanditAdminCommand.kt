@@ -67,7 +67,8 @@ object BanditAdminCommand : CommandBase() {
 					val pickaxe = ItemStack(Items.DIAMOND_PICKAXE)
 
 					// set unbreakable
-					pickaxe.tagCompound = (pickaxe.tagCompound?:NBTTagCompound()).apply { setBoolean("Unbreakable", true) }
+					pickaxe.tagCompound =
+						(pickaxe.tagCompound ?: NBTTagCompound()).apply { setBoolean("Unbreakable", true) }
 
 					// set display name
 					pickaxe.setTranslatableName("item.bandit.unbreakable-pickaxe")
@@ -85,14 +86,16 @@ object BanditAdminCommand : CommandBase() {
 	override fun getTabCompletions(
 		server: MinecraftServer,
 		sender: ICommandSender,
-		argsRaw: Array<out String>,
+		args: Array<out String>,
 		targetPos: BlockPos?,
 	): List<String> {
-		val args = argsRaw.toMutableList()
+		return when(args.size) {
+			1 -> getListOfStringsMatchingLastWord(args, listOf("vm-max", "vm-chunk", "kill-drops", "unbreakable!"))
+			2 -> when(args[0]) {
+				"vm-max", "vm-chunk" -> listOf("0")
+				else -> listOf()
+			}
 
-		return when(args.removeFirstOrNull()) {
-			"vm-max", "vm-chunk" -> listOf("0")
-			"", null -> listOf("vm-max", "vm-chunk", "kill-drops", "unbreakable!")
 			else -> listOf()
 		}
 	}
