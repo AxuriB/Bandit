@@ -1,16 +1,18 @@
 [
-{
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "",
-  "updateUrl": "",
-  "authorList": ["CleanroomMC"],
-  "credits": "Authors of this project",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
-}
+  {
+    "modid": "bandit",
+    "name": "Bandit",
+    "description": "Yet Another Vein Mining Mod, inspired by Qz-Miner.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": [
+      "Taskeren"
+    ],
+    "credits": "QuanhuZeYu, the author of Qz-Miner.",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
 ]

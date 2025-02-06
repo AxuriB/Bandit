@@ -22,6 +22,7 @@ plugins {
     id("eclipse")
     id("com.gtnewhorizons.retrofuturagradle") version "1.3.27"
     id("com.matthewprenger.cursegradle") version "1.4.0"
+    id("com.palantir.git-version") version "3.1.0"
 }
 
 @Suppress("PropertyName")
@@ -50,6 +51,10 @@ val use_assetmover: String by project
 val include_mod: String by project
 @Suppress("PropertyName")
 val coremod_plugin_class_name: String by project
+
+// provided by git-version gradle plugin
+val gitVersion: groovy.lang.Closure<String> by extra
+val versionDetails: groovy.lang.Closure<com.palantir.gradle.gitversion.VersionDetails> by extra
 
 java {
     toolchain {
@@ -180,14 +185,16 @@ if (use_access_transformer.toBoolean()) {
 
 @Suppress("UnstableApiUsage")
 tasks.withType<ProcessResources> {
+    val gitVer = gitVersion()
+
     // This will ensure that this task is redone when the versions change
-    inputs.property("version", mod_version)
+    inputs.property("version", gitVer)
     inputs.property("mcversion", minecraft.mcVersion)
 
     // Replace various properties in mcmod.info and pack.mcmeta if applicable
     filesMatching(arrayListOf("mcmod.info", "pack.mcmeta")) {
         expand(
-            "version" to mod_version,
+            "version" to gitVer,
             "mcversion" to minecraft.mcVersion
         )
     }
