@@ -25,6 +25,10 @@ command.bandit.mode.invalid-sender=§cThis command is only allowed for players.
 
 item.bandit.unbreakable-pickaxe=§cDragonBlood-infused §a§lUNBREAKABLE §1Diamond Pickaxe
 
+keybinding.bandit.category=Bandit Vein Mining
+keybinding.bandit.trigger=Vein Mining
+keybinding.bandit.change-mode=Change Vein Mining Mode
+
 bandit.mode.plain=§aPlain
 bandit.mode.ore=§cOre
 bandit.mode.dummy=§7Dummy
