@@ -7,7 +7,7 @@ command.bandit-admin.kill-drops=§7Killed §a%s §7Items and Experience Orbs.
 
 message.bandit.task-started=§7Vein mining task %s §7is started!
 message.bandit.task-started.halt-hint=§7You can use §e/bandit halt §7to stop the task.
-message.bandit.task-finished=§7Vein mining task %s §7is finished; mining %s §7blocks and gathered %s §7items, time used %s§7.
+message.bandit.task-finished=§7Vein mining task %s §7is finished; mined %s §7blocks and gathered %s §7items, time used %s§7.
 
 message.bandit.mode-changed=§7Vein mode has been switched to %s§7.
 message.bandit.mode-not-found=§7Vein mode is not found.

@@ -1,0 +1,34 @@
+command.bandit-admin.usage=§7/bandit-admin help
+command.bandit-admin.help=§7TODO()
+command.bandit-admin.missing-args=§7缺少参数 %s.
+command.bandit-admin.invalid-arg-type=§7无效参数 %s, 希望获得 %s.
+command.bandit-admin.ok=§aOK!
+command.bandit-admin.kill-drops=§7清除了 §a%s §7物品和经验球.
+
+message.bandit.task-started=§7连锁挖矿任务 %s §7启动!
+message.bandit.task-started.halt-hint=§7你可以使用 §e/bandit halt §7来终止任务.
+message.bandit.task-finished=§7连锁挖矿任务 %s §7完成; 挖掘了 %s §7方块，收集了 %s §7物品, 耗时 %s§7.
+
+message.bandit.mode-changed=§7连锁挖矿模式切换为 %s§7.
+message.bandit.mode-not-found=§7未找到连锁挖矿模式.
+
+message.bandit.mode-updated-by-server=§7连锁挖矿模式被服务器同步为 %s §7.
+
+command.bandit.halt.halted=§a终止!
+command.bandit.halt.invalid-sender=§c这个命令只能由玩家触发.
+
+command.bandit.mode.mode-changed=§7连锁挖矿模式切换为 %s§7.
+command.bandit.mode.mode-not-found=§7未找到连锁挖矿模式 %s §7.
+command.bandit.mode.missing-argument=§7缺少参数.
+command.bandit.mode.invalid-argument=§7无效参数.
+command.bandit.mode.invalid-sender=§c这个命令只能由玩家触发.
+
+item.bandit.unbreakable-pickaxe=§c龙血灌注 §a§l不可破坏的 §1钻石镐
+
+keybinding.bandit.category=强盗连锁挖矿
+keybinding.bandit.trigger=连锁挖矿
+keybinding.bandit.change-mode=切换连锁挖矿模式
+
+bandit.mode.plain=§a普通
+bandit.mode.ore=§c挖矿
+bandit.mode.dummy=§7Dummy
