@@ -9,8 +9,10 @@ import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.init.Blocks
+import net.minecraft.init.SoundEvents
 import net.minecraft.item.ItemStack
 import net.minecraft.util.NonNullList
+import net.minecraft.util.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.text.Style
 import net.minecraft.util.text.TextComponentString
@@ -160,6 +162,7 @@ object VeinMiningHandler {
 					},
 				)
 			)
+			world.playSound(null, player.position, SoundEvents.BLOCK_NOTE_HARP, SoundCategory.PLAYERS, 3.0F, 12.0F)
 			playerJobs.remove(player.uniqueID)
 		}
 		job.start()
