@@ -23,14 +23,19 @@ object ClientEventListeners {
 		if(keyStatus != clientStatus) {
 			clientStatus = keyStatus
 			BanditNetwork.sendMessageToServer(C2SChangeStatusPacket().apply { status = clientStatus })
-			BanditMod.logger.info("Client - Updating Status to $clientStatus")
+			BanditMod.logger.debug("Client - Updating Status to $clientStatus")
 		}
 
 		if(BanditKeyBindings.changeMode.isPressed) {
 			currentMode = (currentMode + 1) % VeinMiningHandler.executorCount
 			BanditNetwork.sendMessageToServer(C2SChangeModePacket().apply { mode = currentMode })
-			BanditMod.logger.info("Client - Updating Mode to $currentMode")
+			BanditMod.logger.debug("Client - Updating Mode to $currentMode")
 		}
+	}
+
+	internal fun handleUpdateModePacket(mode: Int) {
+		currentMode = mode
+		BanditMod.logger.info("Mode updated by server to $mode")
 	}
 
 }

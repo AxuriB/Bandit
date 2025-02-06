@@ -3,12 +3,28 @@ command.bandit-admin.help=§7TODO()
 command.bandit-admin.missing-args=§7Missing argument %s.
 command.bandit-admin.invalid-arg-type=§7Invalid argument %s, expected %s.
 command.bandit-admin.ok=§aOK!
+command.bandit-admin.kill-drops=§7Killed §a%s §7Items and Experience Orbs.
 
 message.bandit.task-started=§7Vein mining task %s §7is started!
 message.bandit.task-started.halt-hint=§7You can use §e/bandit halt §7to stop the task.
 message.bandit.task-finished=§7Vein mining task %s §7is finished; mining %s §7blocks and gathered %s §7items, time used %s§7.
 
 message.bandit.mode-changed=§7Vein mode has been switched to %s§7.
+message.bandit.mode-not-found=§7Vein mode is not found.
+
+message.bandit.mode-updated-by-server=§7Vein mode has been synchronized to %s §7by server.
 
 command.bandit.halt.halted=§aHalted!
 command.bandit.halt.invalid-sender=§cThis command is only allowed for players.
+
+command.bandit.mode.mode-changed=§7Vein mode has been switched to %s§7.
+command.bandit.mode.mode-not-found=§7Vein mode %s §7is not found.
+command.bandit.mode.missing-argument=§7Missing argument.
+command.bandit.mode.invalid-argument=§7Invalid argument.
+command.bandit.mode.invalid-sender=§cThis command is only allowed for players.
+
+item.bandit.unbreakable-pickaxe=§cDragonBlood-infused §a§lUNBREAKABLE §1Diamond Pickaxe
+
+bandit.mode.plain=§aPlain
+bandit.mode.ore=§cOre
+bandit.mode.dummy=§7Dummy

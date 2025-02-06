@@ -1,13 +1,11 @@
 package cn.elytra.mod.bandit.common.mining
 
 import cn.elytra.mod.bandit.BanditMod
-import cn.elytra.mod.bandit.common.mining.executor.DummyVeinMiningExecutor
 import cn.elytra.mod.bandit.common.mining.executor.IVeinMiningExecutor
-import cn.elytra.mod.bandit.common.mining.executor.OreVeinMiningExecutor
-import cn.elytra.mod.bandit.common.mining.executor.PlainVeinMiningExecutor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import net.minecraft.block.Block
+import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.init.Blocks
@@ -32,20 +30,45 @@ object VeinMiningHandler {
 	var DefaultChunkSize = 64
 	var DefaultMaxSize = 1024
 
-	private val veinMiningExecutorMap = buildMap<Int, (Context) -> IVeinMiningExecutor> {
-		this[0] = ::PlainVeinMiningExecutor
-		this[1] = ::OreVeinMiningExecutor
-		this[2] = ::DummyVeinMiningExecutor
-	}
+	val executorCount: Int get() = VeinMiningMode.entries.size
 
-	val executorCount: Int get() = veinMiningExecutorMap.size
-
+	/**
+	 * The map that records the enable/disable status for each player.
+	 */
 	private val playerStatusVeinMiningKey = ConcurrentHashMap<UUID, Boolean>()
-	private val playerStatusVeinMiningMode = ConcurrentHashMap<UUID, Int>()
 
+	/**
+	 * The map that records the running vein mining jobs for each player.
+	 */
 	private val playerJobs = ConcurrentHashMap<UUID, Job>()
 
+	/**
+	 * The integer id generator for the jobs.
+	 */
 	private val executorCounter = AtomicInteger(0)
+
+	/**
+	 * The linked block states.
+	 *
+	 * For example, we should consider lit redstone ores are redstone ores, vice versa.
+	 */
+	internal val AdditionalBlockState = mutableMapOf<IBlockState, MutableList<IBlockState>>()
+
+	/**
+	 * Register the linked block states, so that they are considered as the same blocks when vein mining.
+	 */
+	fun linkBlockStates(blockState1: IBlockState, blockState2: IBlockState) {
+		AdditionalBlockState.computeIfAbsent(blockState1) { mutableListOf() }.add(blockState2)
+		AdditionalBlockState.computeIfAbsent(blockState2) { mutableListOf() }.add(blockState1)
+	}
+
+	fun isInAdditionalBlockStates(originalBlockState: IBlockState, targetBlockState: IBlockState): Boolean {
+		return AdditionalBlockState[originalBlockState]?.contains(targetBlockState) == true
+	}
+
+	init {
+		linkBlockStates(Blocks.REDSTONE_ORE.defaultState, Blocks.LIT_REDSTONE_ORE.defaultState)
+	}
 
 	fun setStatus(player: EntityPlayerMP, status: Boolean) {
 		playerStatusVeinMiningKey[player.uniqueID] = status
@@ -55,15 +78,41 @@ object VeinMiningHandler {
 		return playerStatusVeinMiningKey[player.uniqueID] ?: false
 	}
 
-	fun setModeByInt(player: EntityPlayer, mode: Int) {
-		playerStatusVeinMiningMode[player.uniqueID] = mode
-		player.sendMessage(TextComponentTranslation("message.bandit.mode-changed", mode))
+	fun setMode(player: EntityPlayer, mode: VeinMiningMode) {
+		VeinMiningSavedData.get().setVeinMiningMode(player, mode)
+	}
+
+	/**
+	 * Update the activating vein mining mode for the player, and return the [VeinMiningMode] instance.
+	 * `null` if the mode was not found, and the activating mode will not be updated.
+	 */
+	fun setModeByInt(player: EntityPlayerMP, modeOrdinal: Int): VeinMiningMode? {
+		val mode = VeinMiningMode.getByOrdinal(modeOrdinal)
+		if(mode != null) {
+			setMode(player, mode)
+			return mode
+		} else {
+			// report invalid mode
+			BanditMod.logger.info("Player ${player.name} attempts to set mode to ${modeOrdinal}, but was not found.")
+			return null
+		}
+	}
+
+	/**
+	 * Update the Vein Mode status by packets sent from clients by keybindings.
+	 */
+	internal fun handleModeUpdatePacket(player: EntityPlayerMP, modeOrdinal: Int) {
+		val mode = setModeByInt(player, modeOrdinal)
+		if(mode != null) {
+			player.sendMessage(TextComponentTranslation("message.bandit.mode-changed", mode.displayText))
+		} else {
+			player.sendMessage(TextComponentTranslation("message.bandit.mode-not-found"))
+		}
 	}
 
 	private fun getExecutor(context: Context): IVeinMiningExecutor {
-		val executorId = playerStatusVeinMiningMode[context.player.uniqueID] ?: 0
-		val executorCtor = veinMiningExecutorMap[executorId] ?: ::PlainVeinMiningExecutor
-		return executorCtor(context)
+		val player = context.player
+		return VeinMiningSavedData.get().getVeinMiningMode(player).create(context)
 	}
 
 	fun haltVeinMining(player: EntityPlayerMP) {

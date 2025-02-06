@@ -1,7 +1,7 @@
 package cn.elytra.mod.bandit.common.mining.executor
 
 import cn.elytra.mod.bandit.common.mining.Context
-import cn.elytra.mod.bandit.common.mining.pos_finder.getNeighbors
+import cn.elytra.mod.bandit.common.mining.VeinMiningHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import net.minecraft.util.math.BlockPos
@@ -14,7 +14,8 @@ class PlainVeinMiningExecutor(override val context: Context) : SimpleVeinMiningE
 		val blockState = context.blockState
 
 		val visited = HashSet<BlockPos>()
-		val queue = PriorityQueue<BlockPos> { bp1, bp2 -> bp1.distanceSq(centerPos) compareTo bp2.distanceSq(centerPos) }
+		val queue =
+			PriorityQueue<BlockPos> { bp1, bp2 -> bp1.distanceSq(centerPos) compareTo bp2.distanceSq(centerPos) }
 		queue.add(centerPos)
 
 		while(true) {
@@ -28,10 +29,18 @@ class PlainVeinMiningExecutor(override val context: Context) : SimpleVeinMiningE
 
 			emit(p)
 
-			queue += p.getNeighbors()
+			queue += p.getNeighborsInBox()
 				.filterNot { it in visited }
 				.filterNot { context.world.isAirBlock(it) }
-				.filter { context.world.getBlockState(it) == blockState }
+				.filter {
+					val thatBlockState = context.world.getBlockState(it)
+					thatBlockState == blockState ||
+							VeinMiningHandler.isInAdditionalBlockStates(blockState, thatBlockState)
+				}
 		}
+	}
+
+	private fun BlockPos.getNeighborsInBox(): Iterable<BlockPos> {
+		return BlockPos.getAllInBox(this.x - 1, this.y - 1, this.z - 1, this.x + 1, this.y + 1, this.z + 1)
 	}
 }
