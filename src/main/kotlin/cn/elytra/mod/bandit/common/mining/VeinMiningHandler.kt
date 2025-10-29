@@ -29,8 +29,8 @@ import kotlin.time.toKotlinDuration
 
 object VeinMiningHandler {
 
-	var DefaultChunkSize = 64
-	var DefaultMaxSize = 1024
+	var DefaultChunkSize = 156
+	var DefaultMaxSize = 1024000
 
 	val executorCount: Int get() = VeinMiningMode.entries.size
 
