@@ -14,7 +14,7 @@ class OreVeinMiningExecutor(override val context: Context) : SimpleVeinMiningExe
 	 */
 	private val blockState = context.blockState
 
-	override val positions: Flow<BlockPos> = SimpleMiningPositionIterators.createCube(context, 156)
+	override val positions: Flow<BlockPos> = SimpleMiningPositionIterators.createCube(context, 96)
 		.filter { blockPos ->
 			val thatBlockState = context.world.getBlockState(blockPos)
 			thatBlockState == blockState || VeinMiningHandler.isInAdditionalBlockStates(blockState, thatBlockState)
